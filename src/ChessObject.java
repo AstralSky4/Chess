@@ -29,5 +29,8 @@ public abstract class ChessObject {
     public void moveTo(int position, Board board) {
         board.removePiece(this.getPosition());
         board.addPiece(position, this);
+
+        if (this instanceof Rook) ((Rook) this).setFirstMove();
+        if (this instanceof King) ((King) this).setFirstMove();
     }
 }
