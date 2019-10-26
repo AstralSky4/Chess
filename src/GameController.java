@@ -148,7 +148,7 @@ public class GameController extends GraphicsProgram {
         int yBox = e.getY() / SIDE;
         int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
 
-        System.out.println("Clicked " + this.board.getBoard()[boxClicked].getPosition());
+        System.out.println("Clicked " + (this.board.getBoard()[boxClicked] != null));
 
         if (lastMovedPiece.getTeam() != this.board.getBoard()[boxClicked].getTeam()) {
             // check possible moves
@@ -163,6 +163,8 @@ public class GameController extends GraphicsProgram {
                 moveCircle.setFillColor(Color.CYAN);
 
                 add(moveCircle);
+
+                System.out.println("Got to step 2");
             }
             // show possible moves
         } else {
