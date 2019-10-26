@@ -22,8 +22,9 @@ public class Bishop extends ChessObject{
         dir [3][0] = -1;
         dir [3][1] = -1;
 
+
         // Loop through each direction
-        for (int direction = 0; direction < 4; direction++) {
+        for (int[] ints : dir) {
             // Set initial X and Y coordinates.
             int xPos = ChessObject.toCoords(this.getPosition())[0];
             int yPos = ChessObject.toCoords(this.getPosition())[1];
@@ -31,8 +32,8 @@ public class Bishop extends ChessObject{
             // While: so the bishop stay on the board
             while ((xPos < 8 && xPos >= 0) || (yPos < 8 && yPos >= 0)) {
                 // Modify x and y position to move 1 square diagonally in the current direction
-                xPos += dir[direction][0];
-                yPos += dir[direction][1];
+                xPos += ints[0];
+                yPos += ints[1];
 
                 // If something is detected.
                 if (board.getBoard()[ChessObject.toPos(xPos, yPos)] != null) {
