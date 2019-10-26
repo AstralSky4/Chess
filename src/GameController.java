@@ -13,6 +13,7 @@ public class GameController extends GraphicsProgram {
     private static final int SQUARES_PER_SIDE = 8;
     private static final int SIDE = WIDTH / SQUARES_PER_SIDE;
     private static final int IMG_SIDE = 60;
+    private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
 
     private void createBoard() {
 
@@ -42,19 +43,19 @@ public class GameController extends GraphicsProgram {
                     switch (board.getBoard()[i + SQUARES_PER_SIDE * j].getClass().getSimpleName()) {
                         case "Bishop":
                             if (board.getBoard()[i + SQUARES_PER_SIDE * j].getTeam()) { // white bishop
-                                GImage wBishop = new GImage("images/Chess_blt60.png", i * SIDE + (SIDE - IMG_SIDE) / 2, j * SIDE + (SIDE - IMG_SIDE) / 2);
+                                GImage wBishop = new GImage("images/Chess_blt60.png", i * SIDE + IMG_OFFSET, j * SIDE + IMG_OFFSET);
                                 add(wBishop);
                             } else { // black bishop
-                                GImage bBishop = new GImage("images/Chess_bdt60.png", i * SIDE + (SIDE - IMG_SIDE) / 2, j * SIDE + (SIDE - IMG_SIDE) / 2);
+                                GImage bBishop = new GImage("images/Chess_bdt60.png", i * SIDE + IMG_OFFSET, j * SIDE + IMG_OFFSET);
                                 add(bBishop);
                             }
                             break;
                         case "King":
                             if (board.getBoard()[i + SQUARES_PER_SIDE * j].getTeam()) { // white king
-                                GImage wKing = new GImage("images/Chess_klt60.png", i * SIDE + (SIDE - IMG_SIDE) / 2, j * SIDE + (SIDE - IMG_SIDE) / 2);
+                                GImage wKing = new GImage("images/Chess_klt60.png", i * SIDE + IMG_OFFSET, j * SIDE + IMG_OFFSET);
                                 add(wKing);
                             } else { // black king
-                                GImage bKing = new GImage("images/Chess_kdt60.png", i * SIDE + (SIDE - IMG_SIDE) / 2, j * SIDE + (SIDE - IMG_SIDE) / 2);
+                                GImage bKing = new GImage("images/Chess_kdt60.png", i * SIDE + IMG_OFFSET, j * SIDE + IMG_OFFSET);
                                 add(bKing);
                             }
                             break;
