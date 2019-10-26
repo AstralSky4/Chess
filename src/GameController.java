@@ -1,8 +1,11 @@
 import acm.graphics.GImage;
+import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class GameController extends GraphicsProgram {
 
@@ -28,6 +31,10 @@ public class GameController extends GraphicsProgram {
     private static final String blackQueen = "images/Chess_qdt60.png";
     private static final String whiteRook = "images/Chess_rlt60.png";
     private static final String blackRook = "images/Chess_rdt60.png";
+
+    private ChessObject lastClickedPiece;
+    private ChessObject lastMovedPiece;
+
 
     private void createBoard() {
 
@@ -126,6 +133,38 @@ public class GameController extends GraphicsProgram {
 
         this.createBoard();
         this.drawBoard(this.board);
+
+    }
+
+    // mouse click
+    public void mouseClicked(MouseEvent e) {
+        // coords of mouse:
+        e.getX();
+        e.getY();
+        // position in grid:
+        int xBox = e.getX() / SIDE;
+        int yBox = e.getY() / SIDE;
+        int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
+
+        if (lastMovedPiece.getTeam() != this.board.getBoard()[boxClicked].getTeam()) {
+            // check possible moves
+            ArrayList<Integer> possibleMoves = board.getBoard()[boxClicked].tryMove(this.board);
+            for (int i: possibleMoves) {
+
+                int xCoord = i % 8;
+                int yCoord = i / 8;
+
+                GOval moveCircle = new GOval(xCoord * SIDE, yCoord * SIDE, SIDE * 0.6, SIDE * 0.6);
+                moveCircle.setFilled(true);
+                moveCircle.setFillColor(Color.CYAN);
+
+                add(moveCircle);
+            }
+            // show possible moves
+        } else {
+            // possible move? --> do stuff
+            // if was moved, change lastMovedPiece
+        }
 
     }
 
