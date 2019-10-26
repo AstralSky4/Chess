@@ -17,6 +17,7 @@ public class GameController extends GraphicsProgram {
     private static final int SIDE = WIDTH / SQUARES_PER_SIDE;
     private static final int IMG_SIDE = 60;
     private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
+    private boolean turn;
 
     private ChessObject lastClickedPiece;
     private ChessObject lastMovedPiece;
@@ -32,7 +33,7 @@ public class GameController extends GraphicsProgram {
                 positionRect.setFilled(true);
 
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) positionRect.setFillColor(Color.WHITE);
-                else positionRect.setFillColor(Color.GRAY);
+                else positionRect.setFillColor(Color.decode("#e3e3e3"));
 
                 add(positionRect);
 
@@ -57,17 +58,6 @@ public class GameController extends GraphicsProgram {
 
     }
 
-    public void run() {
-
-        addMouseListeners();
-
-        this.board = new Board();
-
-        this.createBoard();
-        this.drawBoard(this.board);
-
-    }
-
     // mouse click
     public void mouseClicked(MouseEvent e) {
         // coords of mouse:
@@ -80,29 +70,38 @@ public class GameController extends GraphicsProgram {
 
         System.out.println("Clicked " + (this.board.getBoard()[boxClicked] != null));
 
-        if (lastMovedPiece.getTeam() != this.board.getBoard()[boxClicked].getTeam()) {
-            // check possible moves
-            ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
-            for (int i: possibleMoves) {
+        if (this.turn) {
+            if (this.board.getBoard()[boxClicked] != null && this.board.getBoard()[boxClicked].getTeam() == turn) {
+                ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
+                for (int i: possibleMoves) {
 
-                int xCoord = i % 8;
-                int yCoord = i / 8;
+                    int xCoord = i % 8;
+                    int yCoord = i / 8;
 
-                GOval moveCircle = new GOval(xCoord * SIDE, yCoord * SIDE, SIDE * 0.6, SIDE * 0.6);
-                moveCircle.setFilled(true);
-                moveCircle.setFillColor(Color.CYAN);
+                    GOval moveCircle = new GOval(xCoord * SIDE + 0.25 * SIDE, yCoord * SIDE + 0.25 * SIDE, SIDE * 0.5, SIDE * 0.5);
+                    moveCircle.setFilled(true);
+                    moveCircle.setFillColor(Color.decode("#d1ecff"));
 
-                add(moveCircle);
+                    add(moveCircle);
 
-                System.out.println("Got to step 2");
+                    System.out.println("Got to step 2");
+                }
             }
-            // show possible moves
         } else {
-            // possible move? --> do stuff
-            // if was moved, change lastMovedPiece
+
         }
 
     }
 
+    public void run() {
 
+        addMouseListeners();
+
+        this.board = new Board();
+        this.turn = true;
+
+        this.createBoard();
+        this.drawBoard(this.board);
+
+    }
 }
