@@ -19,6 +19,8 @@ public class GameController extends GraphicsProgram {
     private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
     private boolean turn;
 
+    private GRect[] boardPattern = new GRect[64];
+
     private ChessObject lastClickedPiece;
     private ChessObject lastMovedPiece;
 
@@ -29,13 +31,13 @@ public class GameController extends GraphicsProgram {
         for (int i = 0; i < SQUARES_PER_SIDE; i++) {
             for (int j = 0; j < SQUARES_PER_SIDE; j++) {
 
-                GRect positionRect = new GRect(i * SIDE, j * SIDE, SIDE, SIDE);
-                positionRect.setFilled(true);
+                boardPattern[i + 8 * j] = new GRect(i * SIDE, j * SIDE, SIDE, SIDE);
+                boardPattern[i + 8 * j].setFilled(true);
 
-                if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) positionRect.setFillColor(Color.WHITE);
-                else positionRect.setFillColor(Color.decode("#e3e3e3"));
+                if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) boardPattern[i + 8 * j].setFillColor(Color.WHITE);
+                else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
 
-                add(positionRect);
+                add(boardPattern[i + 8 * j]);
 
             }
         }
@@ -78,11 +80,7 @@ public class GameController extends GraphicsProgram {
                     int xCoord = i % 8;
                     int yCoord = i / 8;
 
-                    GOval moveCircle = new GOval(xCoord * SIDE + 0.25 * SIDE, yCoord * SIDE + 0.25 * SIDE, SIDE * 0.5, SIDE * 0.5);
-                    moveCircle.setFilled(true);
-                    moveCircle.setFillColor(Color.decode("#d1ecff"));
-
-                    add(moveCircle);
+                    boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
 
                     System.out.println("Got to step 2");
                 }
