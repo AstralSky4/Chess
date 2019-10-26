@@ -2,9 +2,16 @@ import java.util.ArrayList;
 
 public class King extends ChessObject {
 
+    private boolean firstMove;
+
     King(int position, boolean team) {
         super(position, team);
+        this.firstMove = true;
     }
+
+    public boolean getFirstMove() { return this.firstMove; }
+
+    void setFirstMove() { this.firstMove = false; }
 
     @Override
     public ArrayList<Integer> tryMove(Board board) {
@@ -49,6 +56,32 @@ public class King extends ChessObject {
         // Check if 1 down 1 left is a possible move
         if (this.getPosition() <= 55 && this.getPosition() % 8 != 0 && (board.getBoard()[this.getPosition() + 7] == null || board.getBoard()[this.getPosition() + 7].getTeam() != this.getTeam())) {
             possibleMoves.add(this.getPosition() + 7);
+        }
+
+        // TODO: Cannot castle out of or through check
+        // Castling for white king
+        if (this.getTeam()) {
+            if (this.firstMove && board.getBoard()[63] instanceof Rook && ((Rook) board.getBoard()[63]).getFirstMove()) {
+                if (board.getBoard()[61] == null && board.getBoard()[62] == null) {
+                    possibleMoves.add(62);
+                }
+            } else if (this.firstMove && board.getBoard()[56] instanceof Rook && ((Rook) board.getBoard()[56]).getFirstMove()) {
+                if (board.getBoard()[57] == null && board.getBoard()[58] == null && board.getBoard()[59] == null) {
+                    possibleMoves.add(58);
+                }
+            }
+
+        // Castling for black king
+        } else {
+            if (this.firstMove && board.getBoard()[7] instanceof Rook && ((Rook) board.getBoard()[7]).getFirstMove()) {
+                if (board.getBoard()[5] == null && board.getBoard()[6] == null) {
+                    possibleMoves.add(6);
+                }
+            } else if (this.firstMove && board.getBoard()[0] instanceof Rook && ((Rook) board.getBoard()[0]).getFirstMove()) {
+                if (board.getBoard()[1] == null && board.getBoard()[2] == null && board.getBoard()[3] == null) {
+                    possibleMoves.add(2);
+                }
+            }
         }
 
         return possibleMoves;
