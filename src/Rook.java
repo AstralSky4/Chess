@@ -16,48 +16,48 @@ public class Rook extends ChessObject {
     @Override
     public ArrayList<Integer> tryMove(Board board) {
 
+
         ArrayList<Integer> possibleMoves = new ArrayList<>();
 
-        // Checks for moves to the right of the rook
-        for (int i = this.getPosition(); i % 8 < 7; i++) {
-            // Stops when a piece of the same color is found
-            if (board.getBoard()[i].getTeam() == this.getTeam()) {
-                break;
-            } else {
-                possibleMoves.add(i);
+        // Array of directions
+        int[][] dir = new int[4][2];
+
+        dir [0][0] = 1;
+        dir [0][1] = 0;
+        dir [1][0] = -1;
+        dir [1][1] = 0;
+        dir [2][0] = 0;
+        dir [2][1] = 1;
+        dir [3][0] = 0;
+        dir [3][1] = -1;
+
+        // Loop through each direction
+        for (int[] ints : dir) {
+            // Set initial X and Y coordinates.
+            int xPos = ChessObject.toCoords(this.getPosition())[0];
+            int yPos = ChessObject.toCoords(this.getPosition())[1];
+
+            // While: so the bishop stay on the board
+            while ((xPos < 8 && xPos >= 0) || (yPos < 8 && yPos >= 0)) {
+                // Modify x and y position to move 1 square diagonally in the current direction
+                xPos += ints[0];
+                yPos += ints[1];
+
+                // If something is detected.
+                if (board.getBoard()[ChessObject.toPos(xPos, yPos)] != null) {
+                    // Check if it is on the same team
+                    if (board.getBoard()[ChessObject.toPos(xPos, yPos)].getTeam() != this.getTeam()) {
+                        // If it is on the opposite team, make the tile that is on a possible move.
+                        possibleMoves.add(ChessObject.toPos(xPos, yPos));
+                    }
+                    // Break the while loop so you can move past.
+                    break;
+                } else {
+                    // If nothing is detected add that position as a possible move.
+                    possibleMoves.add(ChessObject.toPos(xPos, yPos));
+                }
             }
         }
-
-        // Checks for moves to the left of the rook
-        for (int i = this.getPosition(); i % 8 > 0; i--) {
-            // Stops when a piece of the same color is found
-            if (board.getBoard()[i].getTeam() == this.getTeam()) {
-                break;
-            } else {
-                possibleMoves.add(i);
-            }
-        }
-
-        // Checks for moves above the rook
-        for (int i = this.getPosition(); i >= 8; i -= 8) {
-            // Stops when a piece of the same color is found
-            if (board.getBoard()[i].getTeam() == this.getTeam()) {
-                break;
-            } else {
-                possibleMoves.add(i);
-            }
-        }
-
-        // Checks for moves below the rook
-        for (int i = this.getPosition(); i <= 55; i += 8) {
-            // Stops when a piece of the same color is found
-            if (board.getBoard()[i].getTeam() == this.getTeam()) {
-                break;
-            } else {
-                possibleMoves.add(i);
-            }
-        }
-
         return possibleMoves;
     }
 }
