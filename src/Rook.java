@@ -8,6 +8,11 @@ public class Rook extends ChessObject {
 
     @Override
     public ArrayList<Integer> tryMove(Board board) {
-        return null;
+
+        ArrayList<Integer> possibleMoves = new ArrayList<>();
+
+
+
+        return possibleMoves;
     }
 }
