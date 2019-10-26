@@ -74,7 +74,18 @@ public class GameController extends GraphicsProgram {
 
         if (this.turn) {
             if (this.board.getBoard()[boxClicked] != null && this.board.getBoard()[boxClicked].getTeam() == turn) {
+
+                // Reset board colors
+                for (int i = 0; i < SQUARES_PER_SIDE; i++) {
+                    for (int j = 0; j < SQUARES_PER_SIDE; j++) {
+                        if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) boardPattern[i + 8 * j].setFillColor(Color.WHITE);
+                        else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
+                    }
+                }
+
+                // Possible moves
                 ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
+
                 for (int i: possibleMoves) {
 
                     int xCoord = i % 8;
