@@ -34,7 +34,7 @@ public class Knight extends ChessObject{
         }
 
         // Checks if down 2 and right 1 is possible
-        if ((this.getPosition() <= 47 && this.getPosition() % 8 != 7) && (board.getBoard()[this.getPosition() + 17] == null) || board.getBoard()[this.getPosition() + 17].getTeam() != this.getTeam()) {
+        if ((this.getPosition() <= 47 && this.getPosition() % 8 != 7) && ((board.getBoard()[this.getPosition() + 17] == null) || board.getBoard()[this.getPosition() + 17].getTeam() != this.getTeam())) {
             possibleMoves.add(this.getPosition() + 17);
         }
 

@@ -34,7 +34,7 @@ public class King extends ChessObject {
         }
 
         // Checks if 1 up 1 right is a possible move
-        if (this.getPosition() >= 8 && this.getPosition() % 8 != 7 && (board.getBoard()[this.getPosition() - 7].getTeam() != this.getTeam() || board.getBoard()[this.getPosition() - 7] == null)) {
+        if (this.getPosition() >= 8 && this.getPosition() % 8 != 7 && (board.getBoard()[this.getPosition() - 7] == null || board.getBoard()[this.getPosition() - 7].getTeam() != this.getTeam())) {
             possibleMoves.add(this.getPosition() - 7);
         }
 

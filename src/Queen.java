@@ -38,10 +38,8 @@ public class Queen extends ChessObject {
             int yPos = ChessObject.toCoords(this.getPosition())[1];
 
             // While: so the bishop stay on the board
-            while ((xPos < 8 && xPos >= 0) || (yPos < 8 && yPos >= 0)) {
+            while (((xPos += ints[0]) < 8 && xPos >= 0) && ((yPos += ints[1]) < 8 && yPos >= 0)) {
                 // Modify x and y position to move 1 square diagonally in the current direction
-                xPos += ints[0];
-                yPos += ints[1];
 
                 // If something is detected.
                 if (board.getBoard()[ChessObject.toPos(xPos, yPos)] != null) {

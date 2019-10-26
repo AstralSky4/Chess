@@ -21,14 +21,14 @@ public class Pawn extends ChessObject {
 
             // Checks for enemy pieces diagonally to the left
             if (this.getPosition() % 8 != 0) {
-                if (!board.getBoard()[this.getPosition() - 9].getTeam()) {
+                if (board.getBoard()[this.getPosition() - 9] != null && !board.getBoard()[this.getPosition() - 9].getTeam()) {
                     possibleMoves.add(this.getPosition() - 9);
                 }
             }
 
             // Checks for enemy pieces diagonally to the right
             if (this.getPosition() % 8 != 7) {
-                if (!board.getBoard()[this.getPosition() - 7].getTeam()) {
+                if (board.getBoard()[this.getPosition() - 7] != null && !board.getBoard()[this.getPosition() - 7].getTeam()) {
                     possibleMoves.add(this.getPosition() - 7);
                 }
             }
