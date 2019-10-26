@@ -129,6 +129,8 @@ public class GameController extends GraphicsProgram {
 
     public void run() {
 
+        addMouseListeners();
+
         this.board = new Board();
 
         this.createBoard();
@@ -146,9 +148,11 @@ public class GameController extends GraphicsProgram {
         int yBox = e.getY() / SIDE;
         int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
 
+        System.out.println("Clicked " + this.board.getBoard()[boxClicked].getPosition());
+
         if (lastMovedPiece.getTeam() != this.board.getBoard()[boxClicked].getTeam()) {
             // check possible moves
-            ArrayList<Integer> possibleMoves = board.getBoard()[boxClicked].tryMove(this.board);
+            ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
             for (int i: possibleMoves) {
 
                 int xCoord = i % 8;
