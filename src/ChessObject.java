@@ -10,9 +10,9 @@ public abstract class ChessObject {
         this.team = team;
     }
 
-    public boolean getTeam() { return this.team; }
+    boolean getTeam() { return this.team; }
 
-    public int getPosition() { return this.position; }
+    int getPosition() { return this.position; }
 
     abstract public ArrayList<Integer> tryMove(Board board);
 

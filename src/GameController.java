@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class GameController extends GraphicsProgram {
 
-    public void createBoard() {
+    private void createBoard() {
 
         this.resize(640, 640);
 

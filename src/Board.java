@@ -1,8 +1,4 @@
-import acm.program.GraphicsProgram;
-import acm.graphics.*;
-import java.awt.Color;
-
-public class Board {
+class Board {
 
     private ChessObject[] board = new ChessObject[64];
 
@@ -10,13 +6,13 @@ public class Board {
 
     }
 
-    public ChessObject[] getBoard() { return board; }
+    ChessObject[] getBoard() { return board; }
 
-    public void addPiece(int position, ChessObject piece) {
+    void addPiece(int position, ChessObject piece) {
         this.board[position] = piece;
     }
 
-    public void removePiece (int position) {
+    void removePiece(int position) {
         this.board[position] = null;
     }
 }

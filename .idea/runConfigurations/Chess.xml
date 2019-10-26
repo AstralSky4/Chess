@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Chess" type="Applet">
+    <option name="MAIN_CLASS_NAME" value="GameController" />
+    <module name="Chess" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
