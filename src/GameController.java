@@ -101,6 +101,13 @@ public class GameController extends GraphicsProgram {
 
     }
 
+    // Move image
+    private void moveImage(GPoint current, GPoint moveTo) {
+        GImage selectedImage = (GImage) getElementAt(current);
+        selectedImage.setLocation(moveTo);
+        selectedImage.sendToFront();
+    }
+
     // mouse click
     public void mouseClicked(MouseEvent e) {
         // position in grid:
@@ -119,8 +126,8 @@ public class GameController extends GraphicsProgram {
                     this.lastClickedPiece = this.board.getBoard()[boxClicked];
                     for (int i : possibleMoves) {
 
-                        int xCoord = i % 8;
-                        int yCoord = i / 8;
+                        int xCoord = i % SQUARES_PER_SIDE;
+                        int yCoord = i / SQUARES_PER_SIDE;
 
                         boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
                     }
@@ -132,10 +139,8 @@ public class GameController extends GraphicsProgram {
         } else {
             if (indexOf(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
 
-                // Get image
-                GImage selectedImage = (GImage) getElementAt(lastClick);
-                selectedImage.setLocation(xBox * SIDE + IMG_OFFSET, yBox * SIDE + IMG_OFFSET);
-                selectedImage.sendToFront();
+                // Move image
+                moveImage(lastClick, new GPoint(xBox * SIDE + IMG_OFFSET, yBox * SIDE + IMG_OFFSET));
 
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
