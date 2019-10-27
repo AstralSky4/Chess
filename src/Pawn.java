@@ -1,3 +1,5 @@
+import acm.graphics.GImage;
+
 import java.util.ArrayList;
 
 public class Pawn extends ChessObject {
