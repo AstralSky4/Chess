@@ -1,5 +1,6 @@
 import acm.graphics.GImage;
 import acm.graphics.GOval;
+import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 
@@ -25,6 +26,7 @@ public class GameController extends GraphicsProgram {
 
     private ChessObject lastClickedPiece;
     private ChessObject lastMovedPiece;
+    private GPoint lastClick;
 
     public int findPiece(String pos) {
         for (int i = 0; i < this.board.getBoard().length; i++) {
@@ -61,15 +63,6 @@ public class GameController extends GraphicsProgram {
 
                 add(boardPattern[i + 8 * j]);
 
-            }
-        }
-
-    }
-
-    private void drawBoard(Board board) {
-
-        for (int i = 0; i < SQUARES_PER_SIDE; i++) {
-            for (int j = 0; j < SQUARES_PER_SIDE; j++) {
                 if (board.getBoard()[i + SQUARES_PER_SIDE * j] != null) { // if there's a piece
                     // Images from https://commons.wikimedia.org/wiki/Category:PNG_chess_pieces/Standard_transparent
                     String name = board.getBoard()[i + SQUARES_PER_SIDE * j].getClass().getSimpleName();
@@ -82,21 +75,25 @@ public class GameController extends GraphicsProgram {
 
     }
 
+    private void drawBoard(Board board) {
+
+
+
+    }
+
     // mouse click
     public void mouseClicked(MouseEvent e) {
-        // coords of mouse:
-        e.getX();
-        e.getY();
         // position in grid:
         int xBox = e.getX() / SIDE;
         int yBox = e.getY() / SIDE;
         int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
 
-        System.out.println("Clicked " + (this.board.getBoard()[boxClicked] != null));
+        System.out.println("Clicked: " + boxClicked);
 
         if (this.lastClickedPiece == null) {
             if (this.board.getBoard()[boxClicked] != null) {
                 if (this.board.getBoard()[boxClicked].getTeam() == turn) {
+
                     ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
 
                     this.lastClickedPiece = this.board.getBoard()[boxClicked];
@@ -106,13 +103,20 @@ public class GameController extends GraphicsProgram {
                         int yCoord = i / 8;
 
                         boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
-
-                        System.out.println("Got to step 2");
                     }
+
+                    // Set point as last point
+                    lastClick = new GPoint((xBox + 0.5) * SIDE, (yBox + 0.5) * SIDE);
                 }
             }
         } else {
             if (indexOf(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
+
+                // Get image
+                GImage selectedImage = (GImage) getElementAt(lastClick);
+                selectedImage.setLocation(xBox * SIDE + IMG_OFFSET, yBox * SIDE + IMG_OFFSET);
+                selectedImage.sendToFront();
+
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
             }
@@ -125,7 +129,7 @@ public class GameController extends GraphicsProgram {
                 }
             }
         }
-        this.drawBoard(this.board);
+//        this.drawBoard(this.board);
     }
 
     private static boolean indexOf(ArrayList<Integer> possibleMoves, int position) {
@@ -143,7 +147,7 @@ public class GameController extends GraphicsProgram {
         this.turn = true;
 
         this.createBoard();
-        this.drawBoard(this.board);
+//        this.drawBoard(this.board);
 
     }
 }
