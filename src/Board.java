@@ -3,12 +3,12 @@ class Board {
     private ChessObject[] board = new ChessObject[64];
 
     Board() {
-//        for (int i = 8; i < 16; i++) {
-//            board[i] = new Pawn(i, false);
-//        }
-//        for (int i = 48; i < 56; i++) {
-//            board[i] = new Pawn(i, true);
-//        }
+        for (int i = 8; i < 16; i++) {
+            board[i] = new Pawn(i, false);
+        }
+        for (int i = 48; i < 56; i++) {
+            board[i] = new Pawn(i, true);
+        }
 
         board[0] = new Rook(0, false);
         board[7] = new Rook(7, false);
