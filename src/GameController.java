@@ -16,9 +16,9 @@ public class GameController extends GraphicsProgram {
     private static final int WIDTH = 640;
     private static final int HEIGHT = 640;
     private static final int SQUARES_PER_SIDE = 8;
-    private static final int SIDE = WIDTH / SQUARES_PER_SIDE;
+    private static final int SIZE = WIDTH / SQUARES_PER_SIDE;
     private static final int IMG_SIDE = 60;
-    private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
+    private static final int IMG_OFFSET = (SIZE - IMG_SIDE) / 2;
     private boolean turn;
 
     private int wKingPos = 60;
@@ -27,27 +27,27 @@ public class GameController extends GraphicsProgram {
     private GRect[] boardPattern = new GRect[64];
 
     private ChessObject lastClickedPiece;
-    private int lastClick;
 
     // Developer
-//    private String[] convertString(String pos) {
-//        String[] out = new String[3];
-//        pos = pos.replace("x", "");
-//        pos = pos.replace("+", "");
-//
-//        if (pos.length() == 2){
-//            out[0] = pos;
-//        }
-//        else if (pos.length() == 3) {
-//            String[] split = pos.split("");
-//
-//            out[0] = split[0] + split[1];
-//            out[1] = split[2];
-//        }
-//
-//        return out;
-//    }
+    private String[] convertString(String pos) {
+        String[] out = new String[3];
+        pos = pos.replace("x", "");
+        pos = pos.replace("+", "");
 
+        if (pos.length() == 2){
+            out[0] = pos;
+        }
+        else if (pos.length() == 3) {
+            String[] split = pos.split("");
+
+            out[0] = split[0] + split[1];
+            out[1] = split[2];
+        }
+
+        return out;
+    }
+
+    // Developer
     private int findPiece(String pos) {
         for (int i = 0; i < this.board.getBoard().length; i++) {
             if (this.board.getBoard()[i] != null && this.board.getBoard()[i].getTeam() == turn) {
@@ -73,9 +73,9 @@ public class GameController extends GraphicsProgram {
         int to = ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1]));
         this.board.getBoard()[from].moveTo(to, board);
         this.turn = !this.turn;
+        if (this.board.getBoard()[to] != null) removeImage(to);
         this.moveImage(from, to);
     }
-
 
     private void createBoard() {
 
@@ -84,7 +84,7 @@ public class GameController extends GraphicsProgram {
         for (int i = 0; i < SQUARES_PER_SIDE; i++) {
             for (int j = 0; j < SQUARES_PER_SIDE; j++) {
 
-                boardPattern[i + 8 * j] = new GRect(i * SIDE, j * SIDE, SIDE, SIDE);
+                boardPattern[i + 8 * j] = new GRect(i * SIZE, j * SIZE, SIZE, SIZE);
                 boardPattern[i + 8 * j].setFilled(true);
 
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) boardPattern[i + 8 * j].setFillColor(Color.WHITE);
@@ -97,7 +97,7 @@ public class GameController extends GraphicsProgram {
                     String name = board.getBoard()[i + SQUARES_PER_SIDE * j].getClass().getSimpleName();
                     boolean team = board.getBoard()[i + SQUARES_PER_SIDE * j].getTeam();
                     String target = ((name.equals("Knight")) ? 'n' : Character.toLowerCase(name.charAt(0))) +(team ? "l" : "d");
-                    add(new GImage("images/Chess_" + target + "t60.png", i * SIDE + IMG_OFFSET, j * SIDE + IMG_OFFSET));
+                    add(new GImage("images/Chess_" + target + "t60.png", i * SIZE + IMG_OFFSET, j * SIZE + IMG_OFFSET));
                 }
             }
         }
@@ -107,21 +107,31 @@ public class GameController extends GraphicsProgram {
     // Move image
     private void moveImage(int current, int moveTo) {
 
-        double xCoordCurrent = (current % SQUARES_PER_SIDE + 0.5) * SIDE;
-        double yCoordCurrent = (current / SQUARES_PER_SIDE + 0.5) * SIDE;
-        int xCoordNext = moveTo % SQUARES_PER_SIDE * SIDE + IMG_OFFSET;
-        int yCoordNext = moveTo / SQUARES_PER_SIDE * SIDE + IMG_OFFSET;
+        double xCoordCurrent = (current % SQUARES_PER_SIDE + 0.5) * SIZE;
+        double yCoordCurrent = (current / SQUARES_PER_SIDE + 0.5) * SIZE;
+        int xCoordNext = moveTo % SQUARES_PER_SIDE * SIZE + IMG_OFFSET;
+        int yCoordNext = moveTo / SQUARES_PER_SIDE * SIZE + IMG_OFFSET;
 
         GImage selectedImage = (GImage) getElementAt(xCoordCurrent, yCoordCurrent);
         selectedImage.setLocation(xCoordNext, yCoordNext);
         selectedImage.sendToFront();
     }
 
+    // Remove image
+    private void removeImage(int place) {
+
+        double xCoordCurrent = (place % SQUARES_PER_SIDE + 0.5) * SIZE;
+        double yCoordCurrent = (place / SQUARES_PER_SIDE + 0.5) * SIZE;
+
+        GImage selectedImage = (GImage) getElementAt(xCoordCurrent, yCoordCurrent);
+        selectedImage.setLocation(800, 0); // off canvas
+    }
+
     // mouse click
     public void mouseClicked(MouseEvent e) {
         // position in grid:
-        int xBox = e.getX() / SIDE;
-        int yBox = e.getY() / SIDE;
+        int xBox = e.getX() / SIZE;
+        int yBox = e.getY() / SIZE;
         int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
 
         System.out.println("Clicked: " + boxClicked);
@@ -146,6 +156,7 @@ public class GameController extends GraphicsProgram {
             if (indexOf(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
 
                 // Move image
+                if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
                 moveImage(this.lastClickedPiece.getPosition(), boxClicked);
 
                 if (this.lastClickedPiece instanceof King) {
@@ -192,21 +203,23 @@ public class GameController extends GraphicsProgram {
         return false;
     }
 
-    boolean checkCheck() {
+    private boolean checkCheck() {
         boolean inCheck = false;
-        if (this.board.getBoard()[this.wKingPos].getTeam() != turn)
+        if (this.board.getBoard()[this.wKingPos].getTeam() != turn) {
             if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
-            } else inCheck = true;
-        else
+                inCheck = true;
+            }
+        } else {
             if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
-            } else inCheck = true;
+                inCheck = true;
+            }
+        }
         return inCheck;
     }
 
-    boolean checkCheck(int position) {
+    private boolean checkCheck(int position) {
         boolean inCheck = false;
         if (this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1) {
-        } else {
             inCheck = true;
         }
         return inCheck;

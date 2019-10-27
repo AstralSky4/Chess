@@ -30,6 +30,7 @@ public abstract class ChessObject {
 
     void moveTo(int position, Board board) {
         board.removePiece(this.getPosition());
+
         board.addPiece(position, this);
 
         this.position = position;
