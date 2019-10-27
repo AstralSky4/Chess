@@ -140,6 +140,20 @@ public class GameController extends GraphicsProgram {
             if (this.board.getBoard()[boxClicked] != null) {
                 if (this.board.getBoard()[boxClicked].getTeam() == turn) {
 
+                    if (turn) {
+                        for (int i = 32; i < 40; i++) {
+                            if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                                ((Pawn) board.getBoard()[i]).setJumped(false);
+                            }
+                        }
+                    } else {
+                        for (int i = 40; i < 48; i++) {
+                            if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                                ((Pawn) board.getBoard()[i]).setJumped(false);
+                            }
+                        }
+                    }
+
                     ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
 
                     this.lastClickedPiece = this.board.getBoard()[boxClicked];
@@ -158,6 +172,8 @@ public class GameController extends GraphicsProgram {
                 // Move image
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
                 moveImage(this.lastClickedPiece.getPosition(), boxClicked);
+
+                if (this.lastClickedPiece instanceof  Pawn && Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 16) ((Pawn) this.lastClickedPiece).setJumped(true);
 
                 if (this.lastClickedPiece instanceof King) {
                     if (this.lastClickedPiece.getTeam()) {
@@ -181,6 +197,25 @@ public class GameController extends GraphicsProgram {
                         }
                     }
                 }
+
+                // check en passant
+                // if is pawn, moved diagonal and nothing in new spot it's en passant
+                if (this.lastClickedPiece instanceof Pawn && this.board.getBoard()[boxClicked] == null) {
+                    if (this.lastClickedPiece.getPosition() - boxClicked == 9) {
+                        removeImage(this.lastClickedPiece.getPosition() - 1);
+                        this.board.removePiece(this.lastClickedPiece.getPosition() - 1);
+                    } else if (this.lastClickedPiece.getPosition() - boxClicked == 7) {
+                        removeImage(this.lastClickedPiece.getPosition() + 1);
+                        this.board.removePiece(this.lastClickedPiece.getPosition() + 1);
+                    } else if (this.lastClickedPiece.getPosition() - boxClicked == -7) {
+                        removeImage(this.lastClickedPiece.getPosition() - 1);
+                        this.board.removePiece(this.lastClickedPiece.getPosition() - 1);
+                    } else if (this.lastClickedPiece.getPosition() - boxClicked == -9) {
+                        removeImage(this.lastClickedPiece.getPosition() + 1);
+                        this.board.removePiece(this.lastClickedPiece.getPosition() + 1);
+                    }
+                }
+
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
                 this.checkCheck();
@@ -193,6 +228,10 @@ public class GameController extends GraphicsProgram {
                     else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
                 }
             }
+
+            // Reset pawns en passant
+
+
         }
     }
 
@@ -214,6 +253,7 @@ public class GameController extends GraphicsProgram {
                 inCheck = true;
             }
         }
+        System.out.println("In check: " + inCheck);
         return inCheck;
     }
 
