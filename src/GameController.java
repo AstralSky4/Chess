@@ -24,7 +24,7 @@ public class GameController extends GraphicsProgram {
     private GRect[] boardPattern = new GRect[64];
 
     private ChessObject lastClickedPiece;
-    private GPoint lastClick;
+    private int lastClick;
 
     // Developer
 //    private String[] convertString(String pos) {
@@ -70,7 +70,7 @@ public class GameController extends GraphicsProgram {
         int to = ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1]));
         this.board.getBoard()[from].moveTo(to, board);
         this.turn = !this.turn;
-        this.moveImage(new GPoint (ChessObject.toCoords(from)[0], ChessObject.toCoords(from)[1]), new GPoint (ChessObject.toCoords(to)[0], ChessObject.toCoords(to)[1]));
+        this.moveImage(from, to);
     }
 
 
@@ -102,9 +102,15 @@ public class GameController extends GraphicsProgram {
     }
 
     // Move image
-    private void moveImage(GPoint current, GPoint moveTo) {
-        GImage selectedImage = (GImage) getElementAt(current);
-        selectedImage.setLocation(moveTo);
+    private void moveImage(int current, int moveTo) {
+
+        double xCoordCurrent = (current % SQUARES_PER_SIDE + 0.5) * SIDE;
+        double yCoordCurrent = (current / SQUARES_PER_SIDE + 0.5) * SIDE;
+        int xCoordNext = moveTo % SQUARES_PER_SIDE * SIDE + IMG_OFFSET;
+        int yCoordNext = moveTo / SQUARES_PER_SIDE * SIDE + IMG_OFFSET;
+
+        GImage selectedImage = (GImage) getElementAt(xCoordCurrent, yCoordCurrent);
+        selectedImage.setLocation(xCoordNext, yCoordNext);
         selectedImage.sendToFront();
     }
 
@@ -131,16 +137,13 @@ public class GameController extends GraphicsProgram {
 
                         boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
                     }
-
-                    // Set point as last point
-                    lastClick = new GPoint((xBox + 0.5) * SIDE, (yBox + 0.5) * SIDE);
                 }
             }
         } else {
             if (indexOf(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
 
                 // Move image
-                moveImage(lastClick, new GPoint(xBox * SIDE + IMG_OFFSET, yBox * SIDE + IMG_OFFSET));
+                moveImage(this.lastClickedPiece.getPosition(), boxClicked);
 
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
@@ -162,6 +165,10 @@ public class GameController extends GraphicsProgram {
         }
         return false;
     }
+
+//    boolean checkCheck() {
+//        this.findPiece(ChessObject.toCoords(this.board.getBoard()[]))
+//    }
 
     public void run() {
 
