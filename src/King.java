@@ -65,7 +65,8 @@ public class King extends ChessObject {
                 if (board.getBoard()[61] == null && board.getBoard()[62] == null) {
                     possibleMoves.add(62);
                 }
-            } else if (this.firstMove && board.getBoard()[56] instanceof Rook && ((Rook) board.getBoard()[56]).getFirstMove()) {
+            }
+            if (this.firstMove && board.getBoard()[56] instanceof Rook && ((Rook) board.getBoard()[56]).getFirstMove()) {
                 if (board.getBoard()[57] == null && board.getBoard()[58] == null && board.getBoard()[59] == null) {
                     possibleMoves.add(58);
                 }
@@ -77,7 +78,8 @@ public class King extends ChessObject {
                 if (board.getBoard()[5] == null && board.getBoard()[6] == null) {
                     possibleMoves.add(6);
                 }
-            } else if (this.firstMove && board.getBoard()[0] instanceof Rook && ((Rook) board.getBoard()[0]).getFirstMove()) {
+            }
+            if (this.firstMove && board.getBoard()[0] instanceof Rook && ((Rook) board.getBoard()[0]).getFirstMove()) {
                 if (board.getBoard()[1] == null && board.getBoard()[2] == null && board.getBoard()[3] == null) {
                     possibleMoves.add(2);
                 }
