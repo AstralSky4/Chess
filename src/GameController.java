@@ -154,7 +154,20 @@ public class GameController extends GraphicsProgram {
                         }
                     }
 
-                    ArrayList<Integer> possibleMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
+                    ArrayList<Integer> testMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
+                    ArrayList<Integer> possibleMoves  = new ArrayList<>();
+
+                    for (int move: testMoves) {
+                        if (this.board.getBoard()[boxClicked] instanceof King) {
+                            this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                            if (!checkCheck(move)) possibleMoves.add(move);
+                            this.board.getBoard()[move].moveTo(boxClicked, this.board);
+                        } else {
+                            this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                            if (!checkCheck()) possibleMoves.add(move);
+                            this.board.getBoard()[move].moveTo(boxClicked, this.board);
+                        }
+                    }
 
                     this.lastClickedPiece = this.board.getBoard()[boxClicked];
                     for (int i : possibleMoves) {
@@ -244,7 +257,7 @@ public class GameController extends GraphicsProgram {
 
     private boolean checkCheck() {
         boolean inCheck = false;
-        if (this.board.getBoard()[this.wKingPos].getTeam() != turn) {
+        if (this.board.getBoard()[this.wKingPos].getTeam() == turn) {
             if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
                 inCheck = true;
             }
