@@ -11,6 +11,8 @@ public class GameController extends GraphicsProgram {
 
     private Board board;
 
+    private static final String[] letterConvDict = {"a", "b", "c", "d", "e", "f", "g", "h"};
+
     private static final int WIDTH = 640;
     private static final int HEIGHT = 640;
     private static final int SQUARES_PER_SIDE = 8;
@@ -23,6 +25,26 @@ public class GameController extends GraphicsProgram {
 
     private ChessObject lastClickedPiece;
     private ChessObject lastMovedPiece;
+
+    public int findPiece(String pos) {
+        for (int i = 0; i < this.board.getBoard().length; i++) {
+            if (this.board.getBoard()[i] != null) {
+                for (int j = 0; j < this.board.getBoard()[i].tryMove(this.board).size(); j++) {
+                    int[] testPos = ChessObject.toCoords(this.board.getBoard()[i].tryMove(this.board).get(j));
+                    if ((letterConvDict[testPos[0]] + testPos[1]).equals(pos)) return this.board.getBoard()[i].tryMove(this.board).get(j);
+                }
+            }
+        }
+        return -1;
+    }
+
+    private int IntConvDict (String pos) {
+        for (int i = 0; i < letterConvDict.length; i++)
+            if (pos.equals(letterConvDict[i])) return i;
+        return -1;
+    }
+
+
 
     private void createBoard() {
 
