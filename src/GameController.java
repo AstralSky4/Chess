@@ -21,8 +21,8 @@ public class GameController extends GraphicsProgram {
     private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
     private boolean turn;
 
-    private int wKingPos;
-    private int bKingPos;
+    private int wKingPos = 60;
+    private int bKingPos = 4;
 
     private GRect[] boardPattern = new GRect[64];
 
@@ -172,6 +172,7 @@ public class GameController extends GraphicsProgram {
                 }
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
+                this.checkCheck();
             }
             this.lastClickedPiece = null;
             // Reset board colors
@@ -193,14 +194,12 @@ public class GameController extends GraphicsProgram {
 
     boolean checkCheck() {
         boolean inCheck = false;
-        if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
-        } else {
-            inCheck = true;
-        }
-        if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
-        } else {
-            inCheck = true;
-        }
+        if (this.board.getBoard()[this.wKingPos].getTeam() != turn)
+            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
+            } else inCheck = true;
+        else
+            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
+            } else inCheck = true;
         return inCheck;
     }
 
