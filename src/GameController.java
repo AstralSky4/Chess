@@ -21,6 +21,9 @@ public class GameController extends GraphicsProgram {
     private static final int IMG_OFFSET = (SIDE - IMG_SIDE) / 2;
     private boolean turn;
 
+    private int wKingPos;
+    private int bKingPos;
+
     private GRect[] boardPattern = new GRect[64];
 
     private ChessObject lastClickedPiece;
@@ -145,6 +148,28 @@ public class GameController extends GraphicsProgram {
                 // Move image
                 moveImage(this.lastClickedPiece.getPosition(), boxClicked);
 
+                if (this.lastClickedPiece instanceof King) {
+                    if (this.lastClickedPiece.getTeam()) {
+                        wKingPos = boxClicked;
+                    } else {
+                        bKingPos = boxClicked;
+                    }
+                    if (Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 2) {
+                        if (boxClicked == 62) {
+                            this.board.getBoard()[63].moveTo(61, this.board);
+                            moveImage(63, 61);
+                        } else if (boxClicked == 58) {
+                            this.board.getBoard()[56].moveTo(59, this.board);
+                            moveImage(56, 59);
+                        } else if (boxClicked == 6) {
+                            this.board.getBoard()[7].moveTo(5, this.board);
+                            moveImage(7, 5);
+                        } else {
+                            this.board.getBoard()[0].moveTo(3, this.board);
+                            moveImage(0, 3);
+                        }
+                    }
+                }
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
                 turn = !turn;
             }
@@ -166,9 +191,27 @@ public class GameController extends GraphicsProgram {
         return false;
     }
 
-//    boolean checkCheck() {
-//        this.findPiece(ChessObject.toCoords(this.board.getBoard()[]))
-//    }
+    boolean checkCheck() {
+        boolean inCheck = false;
+        if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
+        } else {
+            inCheck = true;
+        }
+        if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
+        } else {
+            inCheck = true;
+        }
+        return inCheck;
+    }
+
+    boolean checkCheck(int position) {
+        boolean inCheck = false;
+        if (this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1) {
+        } else {
+            inCheck = true;
+        }
+        return inCheck;
+    }
 
     public void run() {
 
