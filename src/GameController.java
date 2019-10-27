@@ -28,24 +28,31 @@ public class GameController extends GraphicsProgram {
     private ChessObject lastMovedPiece;
     private GPoint lastClick;
 
-    public int findPiece(String pos) {
+    // Developer
+    private int findPiece(String pos) {
         for (int i = 0; i < this.board.getBoard().length; i++) {
-            if (this.board.getBoard()[i] != null) {
+            if (this.board.getBoard()[i] != null && this.board.getBoard()[i].getTeam() == turn) {
                 for (int j = 0; j < this.board.getBoard()[i].tryMove(this.board).size(); j++) {
                     int[] testPos = ChessObject.toCoords(this.board.getBoard()[i].tryMove(this.board).get(j));
-                    if ((letterConvDict[testPos[0]] + testPos[1]).equals(pos)) return this.board.getBoard()[i].tryMove(this.board).get(j);
+                    if ((letterConvDict[testPos[0]] + (8 - testPos[1])).equals(pos)) return this.board.getBoard()[i].tryMove(this.board).get(j);
                 }
             }
         }
         return -1;
     }
 
+    // Developer
     private int IntConvDict (String pos) {
         for (int i = 0; i < letterConvDict.length; i++)
             if (pos.equals(letterConvDict[i])) return i;
         return -1;
     }
 
+    // Developer
+    private void commandMove(String pos) {
+        this.board.getBoard()[this.findPiece(pos)].moveTo(ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1])), board);
+        this.turn = !this.turn;
+    }
 
 
     private void createBoard() {
@@ -129,7 +136,6 @@ public class GameController extends GraphicsProgram {
                 }
             }
         }
-//        this.drawBoard(this.board);
     }
 
     private static boolean indexOf(ArrayList<Integer> possibleMoves, int position) {
@@ -147,7 +153,8 @@ public class GameController extends GraphicsProgram {
         this.turn = true;
 
         this.createBoard();
-//        this.drawBoard(this.board);
+        this.drawBoard(this.board);
+        this.commandMove("d4");
 
     }
 }
