@@ -73,6 +73,4 @@ public class Pawn extends ChessObject {
         }
         return possibleMoves;
     }
-
-    // TODO: Override moveTo()
 }

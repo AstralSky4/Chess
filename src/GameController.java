@@ -151,6 +151,10 @@ public class GameController extends GraphicsProgram {
         return false;
     }
 
+//    boolean checkCheck() {
+//        this.findPiece(ChessObject.toCoords(this.board.getBoard()[]))
+//    }
+
     public void run() {
 
         addMouseListeners();
