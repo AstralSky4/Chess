@@ -27,12 +27,26 @@ public class GameController extends GraphicsProgram {
     private GPoint lastClick;
 
     // Developer
+//    private String[] convertString(String pos) {
+//        String[] out = new String[3];
+//        //pos = pos.replace('x', '');
+//        if (pos.length() == 2){
+//            out[0] = pos;
+//            return out;
+//        }
+//        else if (pos.length() == 3) {
+//            //pos.split("");
+//        }
+//
+//
+//    }
+
     private int findPiece(String pos) {
         for (int i = 0; i < this.board.getBoard().length; i++) {
             if (this.board.getBoard()[i] != null && this.board.getBoard()[i].getTeam() == turn) {
                 for (int j = 0; j < this.board.getBoard()[i].tryMove(this.board).size(); j++) {
                     int[] testPos = ChessObject.toCoords(this.board.getBoard()[i].tryMove(this.board).get(j));
-                    if ((letterConvDict[testPos[0]] + (8 - testPos[1])).equals(pos)) return this.board.getBoard()[i].tryMove(this.board).get(j);
+                    if ((letterConvDict[testPos[0]] + (8 - testPos[1])).equals(pos)) return i;
                 }
             }
         }
@@ -145,7 +159,10 @@ public class GameController extends GraphicsProgram {
         this.turn = true;
 
         this.createBoard();
-        this.commandMove("d4");
+//        this.commandMove("d4");
+//        this.commandMove("d5");
+//        this.commandMove("c4");
+
 
     }
 }
