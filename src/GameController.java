@@ -1,5 +1,4 @@
 import acm.graphics.GImage;
-import acm.graphics.GOval;
 import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
@@ -25,7 +24,6 @@ public class GameController extends GraphicsProgram {
     private GRect[] boardPattern = new GRect[64];
 
     private ChessObject lastClickedPiece;
-    private ChessObject lastMovedPiece;
     private GPoint lastClick;
 
     // Developer
@@ -79,12 +77,6 @@ public class GameController extends GraphicsProgram {
                 }
             }
         }
-
-    }
-
-    private void drawBoard(Board board) {
-
-
 
     }
 
@@ -153,7 +145,6 @@ public class GameController extends GraphicsProgram {
         this.turn = true;
 
         this.createBoard();
-        this.drawBoard(this.board);
         this.commandMove("d4");
 
     }
