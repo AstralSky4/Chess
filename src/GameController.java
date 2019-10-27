@@ -29,16 +29,20 @@ public class GameController extends GraphicsProgram {
     // Developer
 //    private String[] convertString(String pos) {
 //        String[] out = new String[3];
-//        //pos = pos.replace('x', '');
+//        pos = pos.replace("x", "");
+//        pos = pos.replace("+", "");
+//
 //        if (pos.length() == 2){
 //            out[0] = pos;
-//            return out;
 //        }
 //        else if (pos.length() == 3) {
-//            //pos.split("");
+//            String[] split = pos.split("");
+//
+//            out[0] = split[0] + split[1];
+//            out[1] = split[2];
 //        }
 //
-//
+//        return out;
 //    }
 
     private int findPiece(String pos) {
@@ -62,8 +66,11 @@ public class GameController extends GraphicsProgram {
 
     // Developer
     private void commandMove(String pos) {
-        this.board.getBoard()[this.findPiece(pos)].moveTo(ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1])), board);
+        int from = this.findPiece(pos);
+        int to = ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1]));
+        this.board.getBoard()[from].moveTo(to, board);
         this.turn = !this.turn;
+        this.moveImage(new GPoint (ChessObject.toCoords(from)[0], ChessObject.toCoords(from)[1]), new GPoint (ChessObject.toCoords(to)[0], ChessObject.toCoords(to)[1]));
     }
 
 
