@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class GameController extends GraphicsProgram {
 
     private Board board;
+    private GRect[] boardPattern = new GRect[64];
+    private ChessObject lastClickedPiece;
 
     private static final String[] letterConvDict = {"a", "b", "c", "d", "e", "f", "g", "h"};
 
@@ -18,14 +20,11 @@ public class GameController extends GraphicsProgram {
     private static final int SIZE = WIDTH / SQUARES_PER_SIDE;
     private static final int IMG_SIDE = 60;
     private static final int IMG_OFFSET = (SIZE - IMG_SIDE) / 2;
-    private boolean turn;
 
     private int wKingPos = 60;
     private int bKingPos = 4;
 
-    private GRect[] boardPattern = new GRect[64];
-
-    private ChessObject lastClickedPiece;
+    private boolean turn;
 
     // Developer
     private String[] convertString(String pos) {
@@ -76,6 +75,7 @@ public class GameController extends GraphicsProgram {
         this.moveImage(from, to);
     }
 
+    // Draws board for the first time and draws chess pieces
     private void createBoard() {
 
         this.resize(WIDTH, HEIGHT);
@@ -103,7 +103,6 @@ public class GameController extends GraphicsProgram {
 
     }
 
-    // Move image
     private void moveImage(int current, int moveTo) {
 
         double xCoordCurrent = (current % SQUARES_PER_SIDE + 0.5) * SIZE;
@@ -116,7 +115,6 @@ public class GameController extends GraphicsProgram {
         selectedImage.sendToFront();
     }
 
-    // Remove image
     private void removeImage(int place) {
 
         double xCoordCurrent = (place % SQUARES_PER_SIDE + 0.5) * SIZE;
@@ -124,6 +122,39 @@ public class GameController extends GraphicsProgram {
 
         GImage selectedImage = (GImage) getElementAt(xCoordCurrent, yCoordCurrent);
         selectedImage.setLocation(800, 0); // off canvas
+    }
+
+    // Returns whether or not a piece can perform a particular move
+    private static boolean checkMove(ArrayList<Integer> possibleMoves, int position) {
+        for (int pos: possibleMoves) {
+            if (pos == position) return true;
+        }
+        return false;
+    }
+
+    // Checks if king is in check
+    private boolean checkCheck() {
+        boolean inCheck = false;
+        if (this.board.getBoard()[this.wKingPos].getTeam() == turn) {
+            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
+                inCheck = true;
+            }
+        } else {
+            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
+                inCheck = true;
+            }
+        }
+        System.out.println("In check: " + inCheck);
+        return inCheck;
+    }
+
+    // Checks if when the king is moved to a particular position, it is in check
+    private boolean checkCheck(int position) {
+        boolean inCheck = false;
+        if (this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1) {
+            inCheck = true;
+        }
+        return inCheck;
     }
 
     // mouse click
@@ -194,7 +225,7 @@ public class GameController extends GraphicsProgram {
                 }
             }
         } else {
-            if (indexOf(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
+            if (checkMove(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
 
                 // Move image
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
@@ -273,36 +304,6 @@ public class GameController extends GraphicsProgram {
         }
     }
 
-    private static boolean indexOf(ArrayList<Integer> possibleMoves, int position) {
-        for (int pos: possibleMoves) {
-            if (pos == position) return true;
-        }
-        return false;
-    }
-
-    private boolean checkCheck() {
-        boolean inCheck = false;
-        if (this.board.getBoard()[this.wKingPos].getTeam() == turn) {
-            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
-                inCheck = true;
-            }
-        } else {
-            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
-                inCheck = true;
-            }
-        }
-        System.out.println("In check: " + inCheck);
-        return inCheck;
-    }
-
-    private boolean checkCheck(int position) {
-        boolean inCheck = false;
-        if (this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1) {
-            inCheck = true;
-        }
-        return inCheck;
-    }
-
     public void run() {
 
         addMouseListeners();
@@ -314,7 +315,6 @@ public class GameController extends GraphicsProgram {
 //        this.commandMove("d4");
 //        this.commandMove("d5");
 //        this.commandMove("c4");
-
 
     }
 }
