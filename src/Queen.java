@@ -11,23 +11,24 @@ public class Queen extends ChessObject {
 
         ArrayList<Integer> possibleMoves = new ArrayList<>();
 
-        // Array of directions
+        // Array of directions --> first direction, then (x,y)
         int[][] dir = new int[8][2];
+        // directions start at 0 (x-axis) and rotate counter-clockwise
         dir [0][0] = 1;
-        dir [0][1] = 1;
+        dir [0][1] = 0;
         dir [1][0] = 1;
-        dir [1][1] = -1;
-        dir [2][0] = -1;
+        dir [1][1] = 1;
+        dir [2][0] = 0;
         dir [2][1] = 1;
         dir [3][0] = -1;
-        dir [3][1] = -1;
-        dir [4][0] = 1;
+        dir [3][1] = 1;
+        dir [4][0] = -1;
         dir [4][1] = 0;
         dir [5][0] = -1;
-        dir [5][1] = 0;
+        dir [5][1] = -1;
         dir [6][0] = 0;
-        dir [6][1] = 1;
-        dir [7][0] = 0;
+        dir [6][1] = -1;
+        dir [7][0] = 1;
         dir [7][1] = -1;
 
 
@@ -37,7 +38,7 @@ public class Queen extends ChessObject {
             int xPos = ChessObject.toCoords(this.getPosition())[0];
             int yPos = ChessObject.toCoords(this.getPosition())[1];
 
-            // While: so the bishop stay on the board
+            // While: so the queen stay on the board
             while (((xPos += ints[0]) < 8 && xPos >= 0) && ((yPos += ints[1]) < 8 && yPos >= 0)) {
                 // Modify x and y position to move 1 square diagonally in the current direction
 
