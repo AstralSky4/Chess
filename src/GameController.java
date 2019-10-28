@@ -1,5 +1,4 @@
 import acm.graphics.GImage;
-import acm.graphics.GPoint;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 
@@ -61,7 +60,7 @@ public class GameController extends GraphicsProgram {
     }
 
     // Developer
-    private int IntConvDict (String pos) {
+    private int intConvDict(String pos) {
         for (int i = 0; i < letterConvDict.length; i++)
             if (pos.equals(letterConvDict[i])) return i;
         return -1;
@@ -70,7 +69,7 @@ public class GameController extends GraphicsProgram {
     // Developer
     private void commandMove(String pos) {
         int from = this.findPiece(pos);
-        int to = ChessObject.toPos(this.IntConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1]));
+        int to = ChessObject.toPos(this.intConvDict(pos.split("")[0]), Integer.parseInt(pos.split("")[1]));
         this.board.getBoard()[from].moveTo(to, board);
         this.turn = !this.turn;
         if (this.board.getBoard()[to] != null) removeImage(to);
@@ -245,8 +244,23 @@ public class GameController extends GraphicsProgram {
                 }
 
                 this.lastClickedPiece.moveTo(boxClicked, this.board);
+
+                // Reset pawns en passant
+                if (turn) {
+                    for (int i = 24; i < 32; i++) {
+                        if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                            ((Pawn) this.board.getBoard()[i]).setJumped(false);
+                        }
+                    }
+                } else {
+                    for (int i = 32; i < 40; i++) {
+                        if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                            ((Pawn) this.board.getBoard()[i]).setJumped(false);
+                        }
+                    }
+                }
+
                 turn = !turn;
-                this.checkCheck();
             }
             this.lastClickedPiece = null;
             // Reset board colors
@@ -256,10 +270,6 @@ public class GameController extends GraphicsProgram {
                     else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
                 }
             }
-
-            // Reset pawns en passant
-
-
         }
     }
 

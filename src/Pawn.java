@@ -6,7 +6,7 @@ public class Pawn extends ChessObject {
 
     private boolean jumped = false;
 
-    public void setJumped(boolean pawnJump) { this.jumped =  pawnJump; }
+    void setJumped(boolean pawnJump) { this.jumped =  pawnJump; }
 
     Pawn(int position, boolean team) {
         super(position, team);
@@ -55,15 +55,15 @@ public class Pawn extends ChessObject {
             }
 
             // Checks for enemy pieces diagonally to the right
-            if ((this.getPosition() % 8 != 7 && board.getBoard()[this.getPosition() + 9] != null) || ((board.getBoard()[this.getPosition() - 1] instanceof Pawn) && !board.getBoard()[this.getPosition() - 1].getTeam() && ((Pawn) board.getBoard()[this.getPosition() - 1]).jumped)) {
-                if (board.getBoard()[this.getPosition() + 9].getTeam()) {
+            if (this.getPosition() % 8 != 7) {
+                if (board.getBoard()[this.getPosition() + 9] != null && board.getBoard()[this.getPosition() + 9].getTeam() || ((board.getBoard()[this.getPosition() + 1] instanceof Pawn) && board.getBoard()[this.getPosition() + 1].getTeam() && ((Pawn) board.getBoard()[this.getPosition() + 1]).jumped)) {
                     possibleMoves.add(this.getPosition() + 9);
                 }
             }
 
             // Checks for enemy pieces diagonally to the left
-            if ((this.getPosition() % 8 != 0 && board.getBoard()[this.getPosition() + 7] != null) || ((board.getBoard()[this.getPosition() + 1] instanceof Pawn) && !board.getBoard()[this.getPosition() + 1].getTeam() && ((Pawn) board.getBoard()[this.getPosition() + 1]).jumped)) {
-                if (board.getBoard()[this.getPosition() + 7].getTeam()) {
+            if (this.getPosition() % 8 != 0) {
+                if (board.getBoard()[this.getPosition() + 7] != null && board.getBoard()[this.getPosition() + 7].getTeam() || ((board.getBoard()[this.getPosition() - 1] instanceof Pawn) && board.getBoard()[this.getPosition() - 1].getTeam() && ((Pawn) board.getBoard()[this.getPosition() - 1]).jumped)) {
                     possibleMoves.add(this.getPosition() + 7);
                 }
             }
