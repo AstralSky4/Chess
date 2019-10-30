@@ -191,10 +191,14 @@ public class GameController extends GraphicsProgram {
                         if (this.board.getBoard()[move] != null) {
 
                             ChessObject temp = this.board.getBoard()[move];
-                            this.board.getBoard()[boxClicked].moveTo(move, this.board);
 
-                            if (this.board.getBoard()[boxClicked] instanceof King) { if (!checkCheck(move)) possibleMoves.add(move);}
-                            else { if (!checkCheck()) possibleMoves.add(move); }
+                            if (this.board.getBoard()[boxClicked] instanceof King) {
+                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                                if (!checkCheck(move)) possibleMoves.add(move);
+                            } else {
+                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                                if (!checkCheck()) possibleMoves.add(move);
+                            }
 
                             System.out.println("boxClicked null: " + (this.board.getBoard()[boxClicked] == null));
 
@@ -203,10 +207,13 @@ public class GameController extends GraphicsProgram {
 
                         } else {
 
-                            this.board.getBoard()[boxClicked].moveTo(move, this.board);
-
-                            if (this.board.getBoard()[boxClicked] instanceof King) { if (!checkCheck(move)) possibleMoves.add(move);}
-                            else { if (!checkCheck()) possibleMoves.add(move); }
+                            if (this.board.getBoard()[boxClicked] instanceof King) {
+                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                                if (!checkCheck(move)) possibleMoves.add(move);
+                            } else {
+                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
+                                if (!checkCheck()) possibleMoves.add(move);
+                            }
 
                             System.out.println("boxClicked null 2: " + (this.board.getBoard()[boxClicked] == null));
 
