@@ -231,7 +231,7 @@ public class GameController extends GraphicsProgram {
                     }
                 }
             }
-        } else {
+        } else { // TODO: Make sure checkMove receives same ArrayList as possibleMoves from above
             if (checkMove(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
 
                 // Move image
