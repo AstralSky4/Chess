@@ -32,7 +32,9 @@ class Board {
         board[60] = new King(60, true);
     }
 
-    ChessObject[] getBoard() { return board; }
+    ChessObject[] getBoard() {
+        return board;
+    }
 
     void addPiece(int position, ChessObject piece) {
         this.board[position] = piece;

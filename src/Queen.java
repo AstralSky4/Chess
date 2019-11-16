@@ -14,22 +14,22 @@ public class Queen extends ChessObject {
         // Array of directions --> first direction, then (x,y)
         int[][] dir = new int[8][2];
         // directions start at 0 (x-axis) and rotate counter-clockwise
-        dir [0][0] = 1;
-        dir [0][1] = 0;
-        dir [1][0] = 1;
-        dir [1][1] = 1;
-        dir [2][0] = 0;
-        dir [2][1] = 1;
-        dir [3][0] = -1;
-        dir [3][1] = 1;
-        dir [4][0] = -1;
-        dir [4][1] = 0;
-        dir [5][0] = -1;
-        dir [5][1] = -1;
-        dir [6][0] = 0;
-        dir [6][1] = -1;
-        dir [7][0] = 1;
-        dir [7][1] = -1;
+        dir[0][0] = 1;
+        dir[0][1] = 0;
+        dir[1][0] = 1;
+        dir[1][1] = 1;
+        dir[2][0] = 0;
+        dir[2][1] = 1;
+        dir[3][0] = -1;
+        dir[3][1] = 1;
+        dir[4][0] = -1;
+        dir[4][1] = 0;
+        dir[5][0] = -1;
+        dir[5][1] = -1;
+        dir[6][0] = 0;
+        dir[6][1] = -1;
+        dir[7][0] = 1;
+        dir[7][1] = -1;
 
 
         // Loop through each direction

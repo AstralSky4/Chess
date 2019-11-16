@@ -1,15 +1,15 @@
-import acm.graphics.GImage;
-
 import java.util.ArrayList;
 
 public class Pawn extends ChessObject {
 
     private boolean jumped = false;
 
-    void setJumped(boolean pawnJump) { this.jumped =  pawnJump; }
-
     Pawn(int position, boolean team) {
         super(position, team);
+    }
+
+    void setJumped(boolean pawnJump) {
+        this.jumped = pawnJump;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Pawn extends ChessObject {
                 }
             }
 
-        // Pawn moves downwards if it is black (team = false)
+            // Pawn moves downwards if it is black (team = false)
         } else {
 
             // Checks if it can move directly downward

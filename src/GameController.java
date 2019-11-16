@@ -8,23 +8,28 @@ import java.util.ArrayList;
 
 public class GameController extends GraphicsProgram {
 
-    private Board board;
-    private GRect[] boardPattern = new GRect[64];
-    private ChessObject lastClickedPiece;
-
     private static final String[] letterConvDict = {"a", "b", "c", "d", "e", "f", "g", "h"};
-
     private static final int WIDTH = 640;
     private static final int HEIGHT = 640;
     private static final int SQUARES_PER_SIDE = 8;
     private static final int SIZE = WIDTH / SQUARES_PER_SIDE;
     private static final int IMG_SIDE = 60;
     private static final int IMG_OFFSET = (SIZE - IMG_SIDE) / 2;
-
+    private Board board;
+    private GRect[] boardPattern = new GRect[64];
+    private ChessObject lastClickedPiece;
     private int wKingPos = 60;
     private int bKingPos = 4;
 
     private boolean turn;
+
+    // Returns whether or not a piece can perform a particular move
+    private static boolean checkMove(ArrayList<Integer> possibleMoves, int position) {
+        for (int pos : possibleMoves) {
+            if (pos == position) return true;
+        }
+        return false;
+    }
 
     // Developer
     private String[] convertString(String pos) {
@@ -32,10 +37,9 @@ public class GameController extends GraphicsProgram {
         pos = pos.replace("x", "");
         pos = pos.replace("+", "");
 
-        if (pos.length() == 2){
+        if (pos.length() == 2) {
             out[0] = pos;
-        }
-        else if (pos.length() == 3) {
+        } else if (pos.length() == 3) {
             String[] split = pos.split("");
 
             out[0] = split[0] + split[1];
@@ -86,7 +90,8 @@ public class GameController extends GraphicsProgram {
                 boardPattern[i + 8 * j] = new GRect(i * SIZE, j * SIZE, SIZE, SIZE);
                 boardPattern[i + 8 * j].setFilled(true);
 
-                if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) boardPattern[i + 8 * j].setFillColor(Color.WHITE);
+                if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
+                    boardPattern[i + 8 * j].setFillColor(Color.WHITE);
                 else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
 
                 add(boardPattern[i + 8 * j]);
@@ -95,7 +100,7 @@ public class GameController extends GraphicsProgram {
                     // Images from https://commons.wikimedia.org/wiki/Category:PNG_chess_pieces/Standard_transparent
                     String name = board.getBoard()[i + SQUARES_PER_SIDE * j].getClass().getSimpleName();
                     boolean team = board.getBoard()[i + SQUARES_PER_SIDE * j].getTeam();
-                    String target = ((name.equals("Knight")) ? 'n' : Character.toLowerCase(name.charAt(0))) +(team ? "l" : "d");
+                    String target = ((name.equals("Knight")) ? 'n' : Character.toLowerCase(name.charAt(0))) + (team ? "l" : "d");
                     add(new GImage("images/Chess_" + target + "t60.png", i * SIZE + IMG_OFFSET, j * SIZE + IMG_OFFSET));
                 }
             }
@@ -122,14 +127,6 @@ public class GameController extends GraphicsProgram {
 
         GImage selectedImage = (GImage) getElementAt(xCoordCurrent, yCoordCurrent);
         selectedImage.setLocation(800, 0); // off canvas
-    }
-
-    // Returns whether or not a piece can perform a particular move
-    private static boolean checkMove(ArrayList<Integer> possibleMoves, int position) {
-        for (int pos: possibleMoves) {
-            if (pos == position) return true;
-        }
-        return false;
     }
 
     // Checks if king is in check
@@ -185,16 +182,19 @@ public class GameController extends GraphicsProgram {
                     }
 
                     ArrayList<Integer> testMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
-                    ArrayList<Integer> possibleMoves  = new ArrayList<>();
+                    ArrayList<Integer> possibleMoves = new ArrayList<>();
 
-                    for (int move: testMoves) {
+                    for (int move : testMoves) {
                         if (this.board.getBoard()[move] != null) {
 
                             ChessObject temp = this.board.getBoard()[move];
                             this.board.getBoard()[boxClicked].moveTo(move, this.board);
 
-                            if (this.board.getBoard()[boxClicked] instanceof King) { if (!checkCheck(move)) possibleMoves.add(move);}
-                            else { if (!checkCheck()) possibleMoves.add(move); }
+                            if (this.board.getBoard()[boxClicked] instanceof King) {
+                                if (!checkCheck(move)) possibleMoves.add(move);
+                            } else {
+                                if (!checkCheck()) possibleMoves.add(move);
+                            }
 
                             System.out.println("boxClicked null: " + (this.board.getBoard()[boxClicked] == null));
 
@@ -205,8 +205,11 @@ public class GameController extends GraphicsProgram {
 
                             this.board.getBoard()[boxClicked].moveTo(move, this.board);
 
-                            if (this.board.getBoard()[boxClicked] instanceof King) { if (!checkCheck(move)) possibleMoves.add(move);}
-                            else { if (!checkCheck()) possibleMoves.add(move); }
+                            if (this.board.getBoard()[boxClicked] instanceof King) {
+                                if (!checkCheck(move)) possibleMoves.add(move);
+                            } else {
+                                if (!checkCheck()) possibleMoves.add(move);
+                            }
 
                             System.out.println("boxClicked null 2: " + (this.board.getBoard()[boxClicked] == null));
 
@@ -231,7 +234,8 @@ public class GameController extends GraphicsProgram {
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
                 moveImage(this.lastClickedPiece.getPosition(), boxClicked);
 
-                if (this.lastClickedPiece instanceof  Pawn && Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 16) ((Pawn) this.lastClickedPiece).setJumped(true);
+                if (this.lastClickedPiece instanceof Pawn && Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 16)
+                    ((Pawn) this.lastClickedPiece).setJumped(true);
 
                 if (this.lastClickedPiece instanceof King) {
                     if (this.lastClickedPiece.getTeam()) {
@@ -297,7 +301,8 @@ public class GameController extends GraphicsProgram {
             // Reset board colors
             for (int i = 0; i < SQUARES_PER_SIDE; i++) {
                 for (int j = 0; j < SQUARES_PER_SIDE; j++) {
-                    if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0)) boardPattern[i + 8 * j].setFillColor(Color.WHITE);
+                    if ((i % 2 == 0 && j % 2 == 0) || (i % 2 != 0 && j % 2 != 0))
+                        boardPattern[i + 8 * j].setFillColor(Color.WHITE);
                     else boardPattern[i + 8 * j].setFillColor(Color.decode("#e3e3e3"));
                 }
             }

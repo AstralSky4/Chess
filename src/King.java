@@ -9,9 +9,13 @@ public class King extends ChessObject {
         this.firstMove = true;
     }
 
-    public boolean getFirstMove() { return this.firstMove; }
+    public boolean getFirstMove() {
+        return this.firstMove;
+    }
 
-    void setFirstMove() { this.firstMove = false; }
+    void setFirstMove() {
+        this.firstMove = false;
+    }
 
     @Override
     public ArrayList<Integer> tryMove(Board board) {
@@ -72,7 +76,7 @@ public class King extends ChessObject {
                 }
             }
 
-        // Castling for black king
+            // Castling for black king
         } else {
             if (this.firstMove && board.getBoard()[7] instanceof Rook && ((Rook) board.getBoard()[7]).getFirstMove()) {
                 if (board.getBoard()[5] == null && board.getBoard()[6] == null) {

@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Bishop extends ChessObject{
+public class Bishop extends ChessObject {
 
     Bishop(int position, boolean team) {
         super(position, team);
@@ -13,14 +13,14 @@ public class Bishop extends ChessObject{
 
         // Array of directions
         int[][] dir = new int[4][2];
-        dir [0][0] = 1;
-        dir [0][1] = 1;
-        dir [1][0] = 1;
-        dir [1][1] = -1;
-        dir [2][0] = -1;
-        dir [2][1] = 1;
-        dir [3][0] = -1;
-        dir [3][1] = -1;
+        dir[0][0] = 1;
+        dir[0][1] = 1;
+        dir[1][0] = 1;
+        dir[1][1] = -1;
+        dir[2][0] = -1;
+        dir[2][1] = 1;
+        dir[3][0] = -1;
+        dir[3][1] = -1;
 
 
         // Loop through each direction

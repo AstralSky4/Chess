@@ -9,9 +9,13 @@ public class Rook extends ChessObject {
         this.firstMove = true;
     }
 
-    boolean getFirstMove() { return this.firstMove; }
+    boolean getFirstMove() {
+        return this.firstMove;
+    }
 
-    void setFirstMove() { this.firstMove = false; }
+    void setFirstMove() {
+        this.firstMove = false;
+    }
 
     @Override
     public ArrayList<Integer> tryMove(Board board) {
@@ -22,14 +26,14 @@ public class Rook extends ChessObject {
         // Array of directions
         int[][] dir = new int[4][2];
 
-        dir [0][0] = 1;
-        dir [0][1] = 0;
-        dir [1][0] = -1;
-        dir [1][1] = 0;
-        dir [2][0] = 0;
-        dir [2][1] = 1;
-        dir [3][0] = 0;
-        dir [3][1] = -1;
+        dir[0][0] = 1;
+        dir[0][1] = 0;
+        dir[1][0] = -1;
+        dir[1][1] = 0;
+        dir[2][0] = 0;
+        dir[2][1] = 1;
+        dir[3][0] = 0;
+        dir[3][1] = -1;
 
         // Loop through each direction
         for (int[] ints : dir) {

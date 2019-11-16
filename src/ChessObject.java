@@ -1,5 +1,3 @@
-import acm.graphics.GImage;
-
 import java.util.ArrayList;
 
 public abstract class ChessObject {
@@ -22,9 +20,13 @@ public abstract class ChessObject {
         return (x + (8 * y));
     }
 
-    boolean getTeam() { return this.team; }
+    boolean getTeam() {
+        return this.team;
+    }
 
-    int getPosition() { return this.position; }
+    int getPosition() {
+        return this.position;
+    }
 
     abstract public ArrayList<Integer> tryMove(Board board);
 
