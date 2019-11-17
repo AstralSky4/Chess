@@ -157,6 +157,48 @@ public class GameController extends GraphicsProgram {
         return inCheck;
     }
 
+    private ArrayList<Integer> possibleMoves(int moveTo) { // TODO: checkCheck() not working properly
+
+        ArrayList<Integer> testMoves = this.board.getBoard()[moveTo].tryMove(this.board);
+        ArrayList<Integer> possibleMoves  = new ArrayList<>();
+
+        for (int move: testMoves) {
+            if (this.board.getBoard()[move] != null) {
+
+                ChessObject temp = this.board.getBoard()[move];
+
+                if (this.board.getBoard()[moveTo] instanceof King) {
+                    this.board.getBoard()[moveTo].moveTo(move, this.board);
+                    if (!checkCheck(move)) possibleMoves.add(move);
+                } else {
+                    this.board.getBoard()[moveTo].moveTo(move, this.board);
+                    if (!checkCheck()) possibleMoves.add(move);
+                }
+
+                System.out.println("boxClicked null: " + (this.board.getBoard()[moveTo] == null));
+
+                this.board.getBoard()[move].moveTo(moveTo, this.board);
+                this.board.addPiece(move, temp);
+
+            } else {
+
+                if (this.board.getBoard()[moveTo] instanceof King) {
+                    this.board.getBoard()[moveTo].moveTo(move, this.board);
+                    if (!checkCheck(move)) possibleMoves.add(move);
+                } else {
+                    this.board.getBoard()[moveTo].moveTo(move, this.board);
+                    if (!checkCheck()) possibleMoves.add(move);
+                }
+
+                System.out.println("boxClicked null 2: " + (this.board.getBoard()[moveTo] == null));
+
+                this.board.getBoard()[move].moveTo(moveTo, this.board);
+            }
+        }
+
+        return possibleMoves;
+    }
+
     // mouse click
     public void mouseClicked(MouseEvent e) {
         // position in grid:
@@ -184,42 +226,7 @@ public class GameController extends GraphicsProgram {
                         }
                     }
 
-                    ArrayList<Integer> testMoves = this.board.getBoard()[boxClicked].tryMove(this.board);
-                    ArrayList<Integer> possibleMoves  = new ArrayList<>();
-
-                    for (int move: testMoves) {
-                        if (this.board.getBoard()[move] != null) {
-
-                            ChessObject temp = this.board.getBoard()[move];
-
-                            if (this.board.getBoard()[boxClicked] instanceof King) {
-                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
-                                if (!checkCheck(move)) possibleMoves.add(move);
-                            } else {
-                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
-                                if (!checkCheck()) possibleMoves.add(move);
-                            }
-
-                            System.out.println("boxClicked null: " + (this.board.getBoard()[boxClicked] == null));
-
-                            this.board.getBoard()[move].moveTo(boxClicked, this.board);
-                            this.board.addPiece(move, temp);
-
-                        } else {
-
-                            if (this.board.getBoard()[boxClicked] instanceof King) {
-                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
-                                if (!checkCheck(move)) possibleMoves.add(move);
-                            } else {
-                                this.board.getBoard()[boxClicked].moveTo(move, this.board);
-                                if (!checkCheck()) possibleMoves.add(move);
-                            }
-
-                            System.out.println("boxClicked null 2: " + (this.board.getBoard()[boxClicked] == null));
-
-                            this.board.getBoard()[move].moveTo(boxClicked, this.board);
-                        }
-                    }
+                    ArrayList<Integer> possibleMoves = possibleMoves(boxClicked);
 
                     this.lastClickedPiece = this.board.getBoard()[boxClicked];
                     for (int i : possibleMoves) {
@@ -231,8 +238,9 @@ public class GameController extends GraphicsProgram {
                     }
                 }
             }
-        } else { // TODO: Make sure checkMove receives same ArrayList as possibleMoves from above
-            if (checkMove(this.board.getBoard()[this.lastClickedPiece.getPosition()].tryMove(this.board), boxClicked)) {
+        } else {
+
+            if (checkMove(possibleMoves(this.lastClickedPiece.getPosition()), boxClicked)) {
 
                 // Move image
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
