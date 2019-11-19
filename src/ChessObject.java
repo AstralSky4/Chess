@@ -29,14 +29,9 @@ public abstract class ChessObject {
     abstract public ArrayList<Integer> tryMove(Board board);
 
     void moveTo(int position, Board board) {
-
         board.removePiece(this.getPosition());
         board.addPiece(position, this);
 
         this.position = position;
-
-        // TODO: add check in case was moved as temp
-        if (this instanceof Rook) ((Rook) this).setFirstMove();
-        if (this instanceof King) ((King) this).setFirstMove();
     }
 }

@@ -11,8 +11,6 @@ public class King extends ChessObject {
 
     public boolean getFirstMove() { return this.firstMove; }
 
-    void setFirstMove() { this.firstMove = false; }
-
     @Override
     public ArrayList<Integer> tryMove(Board board) {
 
@@ -87,5 +85,12 @@ public class King extends ChessObject {
         }
 
         return possibleMoves;
+    }
+
+    @Override
+    void moveTo(int position, Board board) {
+        super.moveTo(position, board);
+        // TODO: Add check to see if it was moved temporarily
+        this.firstMove = false;
     }
 }
