@@ -103,6 +103,7 @@ public class GameController extends GraphicsProgram {
 
     }
 
+    // Moves the image of a chess piece to specified board position
     private void moveImage(int current, int moveTo) {
 
         double xCoordCurrent = (current % SQUARES_PER_SIDE + 0.5) * SIZE;
@@ -134,126 +135,87 @@ public class GameController extends GraphicsProgram {
 
     // Checks if king is in check
     private boolean checkCheck() {
-        boolean inCheck = false;
         if (this.board.getBoard()[this.wKingPos].getTeam() == turn) {
-            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1) {
-                inCheck = true;
-            }
+            return this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1;
         } else {
-            if (this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1) {
-                inCheck = true;
-            }
+            return this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1;
         }
-        System.out.println("In check: " + inCheck);
-        return inCheck;
     }
 
     // Checks if when the king is moved to a particular position, it is in check
     private boolean checkCheck(int position) {
-        boolean inCheck = false;
-        if (this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1) {
-            inCheck = true;
-        }
-        return inCheck;
+        return this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1;
     }
 
+    // Returns an ArrayList of the actual moves a particular piece can make
     private ArrayList<Integer> possibleMoves(int moveTo) { // TODO: checkCheck() not working properly
 
-        ArrayList<Integer> testMoves = this.board.getBoard()[moveTo].tryMove(this.board);
-        ArrayList<Integer> possibleMoves  = new ArrayList<>();
+        ArrayList<Integer> testMoves = this.board.getBoard()[moveTo].tryMove(this.board); // All moves
+        ArrayList<Integer> possibleMoves  = new ArrayList<>(); // All moves minus moves that would keep or put own king in check
 
         for (int move: testMoves) {
-            if (this.board.getBoard()[move] != null) {
 
-                ChessObject temp = this.board.getBoard()[move];
+            ChessObject temp = this.board.getBoard()[move]; // Keeping killed piece to be place back at the end
 
-                if (this.board.getBoard()[moveTo] instanceof King) {
-                    this.board.getBoard()[moveTo].moveTo(move, this.board);
-                    if (!checkCheck(move)) possibleMoves.add(move);
-                } else {
-                    this.board.getBoard()[moveTo].moveTo(move, this.board);
-                    if (!checkCheck()) possibleMoves.add(move);
-                }
-
-                System.out.println("boxClicked null: " + (this.board.getBoard()[moveTo] == null));
-
-                this.board.getBoard()[move].moveTo(moveTo, this.board);
-                this.board.addPiece(move, temp);
-
+            if (this.board.getBoard()[moveTo] instanceof King) { // If the moving piece is a king
+                this.board.getBoard()[moveTo].moveTo(move, this.board); // Move king to test position
+                if (!checkCheck(move)) possibleMoves.add(move); // If the move doesn't put own king in check, add to possibleMoves
             } else {
-
-                if (this.board.getBoard()[moveTo] instanceof King) {
-                    this.board.getBoard()[moveTo].moveTo(move, this.board);
-                    if (!checkCheck(move)) possibleMoves.add(move);
-                } else {
-                    this.board.getBoard()[moveTo].moveTo(move, this.board);
-                    if (!checkCheck()) possibleMoves.add(move);
-                }
-
-                System.out.println("boxClicked null 2: " + (this.board.getBoard()[moveTo] == null));
-
-                this.board.getBoard()[move].moveTo(moveTo, this.board);
+                this.board.getBoard()[moveTo].moveTo(move, this.board); // Move piece to test position
+                if (!checkCheck()) possibleMoves.add(move); // If the move doesn't put own king in check, add to possibleMoves
             }
+
+            this.board.getBoard()[move].moveTo(moveTo, this.board); // Moving piece back to original spot
+            if (temp != null) this.board.addPiece(move, temp); // Killed piece is placed back
         }
 
         return possibleMoves;
     }
 
-    // mouse click
+    // Triggered on mouse click
     public void mouseClicked(MouseEvent e) {
         // position in grid:
-        int xBox = e.getX() / SIZE;
-        int yBox = e.getY() / SIZE;
-        int boxClicked = xBox + SQUARES_PER_SIDE * yBox;
-
-        System.out.println("Clicked: " + boxClicked);
+        int boxClicked = (e.getX() / SIZE) + SQUARES_PER_SIDE * (e.getY() / SIZE);
 
         if (this.lastClickedPiece == null) {
-            if (this.board.getBoard()[boxClicked] != null) {
-                if (this.board.getBoard()[boxClicked].getTeam() == turn) {
+            if (this.board.getBoard()[boxClicked] != null && this.board.getBoard()[boxClicked].getTeam() == turn) {
 
-                    if (turn) {
-                        for (int i = 32; i < 40; i++) {
-                            if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
-                                ((Pawn) board.getBoard()[i]).setJumped(false);
-                            }
-                        }
-                    } else {
-                        for (int i = 40; i < 48; i++) {
-                            if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
-                                ((Pawn) board.getBoard()[i]).setJumped(false);
-                            }
+                if (turn) {
+                    for (int i = 32; i < 40; i++) {
+                        if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                            ((Pawn) board.getBoard()[i]).setJumped(false);
                         }
                     }
-
-                    ArrayList<Integer> possibleMoves = possibleMoves(boxClicked);
-
-                    this.lastClickedPiece = this.board.getBoard()[boxClicked];
-                    for (int i : possibleMoves) {
-
-                        int xCoord = i % SQUARES_PER_SIDE;
-                        int yCoord = i / SQUARES_PER_SIDE;
-
-                        boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
+                } else {
+                    for (int i = 40; i < 48; i++) {
+                        if (this.board.getBoard()[i] instanceof Pawn && this.board.getBoard()[i].getTeam() != turn) {
+                            ((Pawn) board.getBoard()[i]).setJumped(false);
+                        }
                     }
+                }
+
+                this.lastClickedPiece = this.board.getBoard()[boxClicked];
+                for (int i : possibleMoves(boxClicked)) {
+
+                    int xCoord = i % SQUARES_PER_SIDE;
+                    int yCoord = i / SQUARES_PER_SIDE;
+
+                    boardPattern[xCoord + SQUARES_PER_SIDE * yCoord].setFillColor(Color.decode("#d1ecff"));
                 }
             }
         } else {
 
             if (checkMove(possibleMoves(this.lastClickedPiece.getPosition()), boxClicked)) {
-
                 // Move image
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
                 moveImage(this.lastClickedPiece.getPosition(), boxClicked);
 
-                if (this.lastClickedPiece instanceof  Pawn && Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 16) ((Pawn) this.lastClickedPiece).setJumped(true);
+                if (this.lastClickedPiece instanceof Pawn && Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 16) ((Pawn) this.lastClickedPiece).setJumped(true);
 
                 if (this.lastClickedPiece instanceof King) {
-                    if (this.lastClickedPiece.getTeam()) {
-                        wKingPos = boxClicked;
-                    } else {
-                        bKingPos = boxClicked;
-                    }
+                    if (this.lastClickedPiece.getTeam()) wKingPos = boxClicked;
+                    else bKingPos = boxClicked;
+
                     if (Math.abs(this.lastClickedPiece.getPosition() - boxClicked) == 2) {
                         if (boxClicked == 62) {
                             this.board.getBoard()[63].moveTo(61, this.board);
@@ -305,9 +267,9 @@ public class GameController extends GraphicsProgram {
                         }
                     }
                 }
-
                 turn = !turn;
             }
+
             this.lastClickedPiece = null;
             // Reset board colors
             for (int i = 0; i < SQUARES_PER_SIDE; i++) {

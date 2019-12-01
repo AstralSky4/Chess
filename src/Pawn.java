@@ -1,5 +1,3 @@
-import acm.graphics.GImage;
-
 import java.util.ArrayList;
 
 public class Pawn extends ChessObject {
@@ -21,9 +19,7 @@ public class Pawn extends ChessObject {
         if (this.getTeam()) {
 
             // Checks if it can move directly forward
-            if (board.getBoard()[this.getPosition() - 8] == null) {
-                possibleMoves.add(this.getPosition() - 8);
-            }
+            if (board.getBoard()[this.getPosition() - 8] == null) possibleMoves.add(this.getPosition() - 8);
 
             // Checks for enemy pieces diagonally to the left
             if (this.getPosition() % 8 != 0) {
@@ -50,9 +46,7 @@ public class Pawn extends ChessObject {
         } else {
 
             // Checks if it can move directly downward
-            if (board.getBoard()[this.getPosition() + 8] == null) {
-                possibleMoves.add(this.getPosition() + 8);
-            }
+            if (board.getBoard()[this.getPosition() + 8] == null) possibleMoves.add(this.getPosition() + 8);
 
             // Checks for enemy pieces diagonally to the right
             if (this.getPosition() % 8 != 7) {

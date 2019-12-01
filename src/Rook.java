@@ -14,7 +14,6 @@ public class Rook extends ChessObject {
     @Override
     public ArrayList<Integer> tryMove(Board board) {
 
-
         ArrayList<Integer> possibleMoves = new ArrayList<>();
 
         // Array of directions

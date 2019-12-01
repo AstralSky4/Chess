@@ -1,5 +1,3 @@
-import com.sun.deploy.security.BadCertificateDialog;
-
 import java.util.ArrayList;
 
 public class Knight extends ChessObject{
