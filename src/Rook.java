@@ -11,6 +11,8 @@ public class Rook extends ChessObject {
 
     boolean getFirstMove() { return this.firstMove; }
 
+    public void setFirstMove(boolean move) { this.firstMove = move; }
+
     @Override
     public ArrayList<Integer> tryMove(Board board) {
 
@@ -59,7 +61,7 @@ public class Rook extends ChessObject {
     @Override
     void moveTo(int position, Board board) {
         super.moveTo(position, board);
-        // TODO: Add check to see if it was moved temporarily
+
         this.firstMove = false;
     }
 }

@@ -3,13 +3,19 @@ import java.util.ArrayList;
 public class King extends ChessObject {
 
     private boolean firstMove;
+    private boolean inCheck;
 
     King(int position, boolean team) {
         super(position, team);
         this.firstMove = true;
+        this.inCheck = false;
     }
 
     public boolean getFirstMove() { return this.firstMove; }
+
+    public void setFirstMove(boolean move) { this.firstMove = move; }
+
+    public void setInCheck(boolean check) { this.inCheck = check; }
 
     @Override
     public ArrayList<Integer> tryMove(Board board) {
@@ -56,26 +62,27 @@ public class King extends ChessObject {
             possibleMoves.add(this.getPosition() + 7);
         }
 
-        // TODO: Cannot castle out of or through check
-        // Castling for white king
-        if (this.getTeam()) {
-            if (this.firstMove && board.getBoard()[63] instanceof Rook && ((Rook) board.getBoard()[63]).getFirstMove()) {
-                if (board.getBoard()[61] == null && board.getBoard()[62] == null) possibleMoves.add(62);
-            }
-            if (this.firstMove && board.getBoard()[56] instanceof Rook && ((Rook) board.getBoard()[56]).getFirstMove()) {
-                if (board.getBoard()[57] == null && board.getBoard()[58] == null && board.getBoard()[59] == null) {
-                    possibleMoves.add(58);
+        if (!this.inCheck) {
+            // Castling for white king
+            if (this.getTeam()) {
+                if (this.firstMove && board.getBoard()[63] instanceof Rook && ((Rook) board.getBoard()[63]).getFirstMove()) {
+                    if (board.getBoard()[61] == null && board.getBoard()[62] == null) possibleMoves.add(62);
                 }
-            }
+                if (this.firstMove && board.getBoard()[56] instanceof Rook && ((Rook) board.getBoard()[56]).getFirstMove()) {
+                    if (board.getBoard()[57] == null && board.getBoard()[58] == null && board.getBoard()[59] == null) {
+                        possibleMoves.add(58);
+                    }
+                }
 
-        // Castling for black king
-        } else {
-            if (this.firstMove && board.getBoard()[7] instanceof Rook && ((Rook) board.getBoard()[7]).getFirstMove()) {
-                if (board.getBoard()[5] == null && board.getBoard()[6] == null) possibleMoves.add(6);
-            }
-            if (this.firstMove && board.getBoard()[0] instanceof Rook && ((Rook) board.getBoard()[0]).getFirstMove()) {
-                if (board.getBoard()[1] == null && board.getBoard()[2] == null && board.getBoard()[3] == null) {
-                    possibleMoves.add(2);
+            // Castling for black king
+            } else {
+                if (this.firstMove && board.getBoard()[7] instanceof Rook && ((Rook) board.getBoard()[7]).getFirstMove()) {
+                    if (board.getBoard()[5] == null && board.getBoard()[6] == null) possibleMoves.add(6);
+                }
+                if (this.firstMove && board.getBoard()[0] instanceof Rook && ((Rook) board.getBoard()[0]).getFirstMove()) {
+                    if (board.getBoard()[1] == null && board.getBoard()[2] == null && board.getBoard()[3] == null) {
+                        possibleMoves.add(2);
+                    }
                 }
             }
         }
@@ -86,7 +93,7 @@ public class King extends ChessObject {
     @Override
     void moveTo(int position, Board board) {
         super.moveTo(position, board);
-        // TODO: Add check to see if it was moved temporarily
+
         this.firstMove = false;
     }
 }

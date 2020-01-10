@@ -47,7 +47,7 @@ public class GameController extends GraphicsProgram {
 
     // Developer
     private int findPiece(String pos) {
-        for (int i = 0; i < this.board.getBoard().length; i++) {
+        for (int i = 0; i < 64; i++) {
             if (this.board.getBoard()[i] != null && this.board.getBoard()[i].getTeam() == turn) {
                 for (int j = 0; j < this.board.getBoard()[i].tryMove(this.board).size(); j++) {
                     int[] testPos = ChessObject.toCoords(this.board.getBoard()[i].tryMove(this.board).get(j));
@@ -56,6 +56,18 @@ public class GameController extends GraphicsProgram {
             }
         }
         return -1;
+    }
+
+    // Checks if an enemy piece can move to the specified position
+    private boolean checkEnemyMove(int position) {
+        for (int i = 0; i < 64; i++) {
+            if (this.board.getBoard()[i] != null && this.board.getBoard()[i].getTeam() != turn) {
+                for (int move : this.board.getBoard()[i].tryMove(this.board)) {
+                    if (move == position) return true;
+                }
+            }
+        }
+        return false;
     }
 
     // Developer
@@ -135,20 +147,20 @@ public class GameController extends GraphicsProgram {
 
     // Checks if king is in check
     private boolean checkCheck() {
-        if (this.board.getBoard()[this.wKingPos].getTeam() == turn) {
-            return this.findPiece(letterConvDict[ChessObject.toCoords(this.wKingPos)[0]] + (8 - ChessObject.toCoords(this.wKingPos)[1])) != -1;
-        } else {
-            return this.findPiece(letterConvDict[ChessObject.toCoords(this.bKingPos)[0]] + (8 - ChessObject.toCoords(this.bKingPos)[1])) != -1;
-        }
+        boolean inCheck = checkEnemyMove(turn ? wKingPos : bKingPos);
+        ((King) this.board.getBoard()[turn ? wKingPos : bKingPos]).setInCheck(inCheck);
+        return inCheck;
     }
 
     // Checks if when the king is moved to a particular position, it is in check
-    private boolean checkCheck(int position) {
-        return this.findPiece(letterConvDict[ChessObject.toCoords(position)[0]] + (8 - ChessObject.toCoords(position)[1])) != -1;
+    public boolean checkCheck(int position) {
+        boolean inCheck = checkEnemyMove(position);
+        ((King) this.board.getBoard()[position]).setInCheck(inCheck);
+        return inCheck;
     }
 
     // Returns an ArrayList of the actual moves a particular piece can make
-    private ArrayList<Integer> possibleMoves(int moveTo) { // TODO: checkCheck() not working properly
+    private ArrayList<Integer> possibleMoves(int moveTo) {
 
         ArrayList<Integer> testMoves = this.board.getBoard()[moveTo].tryMove(this.board); // All moves
         ArrayList<Integer> possibleMoves  = new ArrayList<>(); // All moves minus moves that would keep or put own king in check
@@ -156,6 +168,13 @@ public class GameController extends GraphicsProgram {
         for (int move: testMoves) {
 
             ChessObject temp = this.board.getBoard()[move]; // Keeping killed piece to be place back at the end
+
+            boolean tempMove = true;
+            boolean thisMove = true;
+            if (temp instanceof King) tempMove = ((King) temp).getFirstMove();
+            if (temp instanceof Rook) tempMove = ((Rook) temp).getFirstMove();
+            if (this.board.getBoard()[moveTo] instanceof King) thisMove = ((King) this.board.getBoard()[moveTo]).getFirstMove();
+            if (this.board.getBoard()[moveTo] instanceof Rook) thisMove = ((Rook) this.board.getBoard()[moveTo]).getFirstMove();
 
             if (this.board.getBoard()[moveTo] instanceof King) { // If the moving piece is a king
                 this.board.getBoard()[moveTo].moveTo(move, this.board); // Move king to test position
@@ -167,6 +186,11 @@ public class GameController extends GraphicsProgram {
 
             this.board.getBoard()[move].moveTo(moveTo, this.board); // Moving piece back to original spot
             if (temp != null) this.board.addPiece(move, temp); // Killed piece is placed back
+
+            if (temp instanceof King) ((King) temp).setFirstMove(tempMove);
+            if (temp instanceof Rook) ((Rook) temp).setFirstMove(tempMove);
+            if (this.board.getBoard()[moveTo] instanceof King) ((King) this.board.getBoard()[moveTo]).setFirstMove(thisMove);
+            if (this.board.getBoard()[moveTo] instanceof Rook) ((Rook) this.board.getBoard()[moveTo]).setFirstMove(thisMove);
         }
 
         return possibleMoves;
@@ -176,6 +200,9 @@ public class GameController extends GraphicsProgram {
     public void mouseClicked(MouseEvent e) {
         // position in grid:
         int boxClicked = (e.getX() / SIZE) + SQUARES_PER_SIDE * (e.getY() / SIZE);
+
+        if (turn) ((King) this.board.getBoard()[wKingPos]).setInCheck(checkCheck());
+        else ((King) this.board.getBoard()[bKingPos]).setInCheck(checkCheck());
 
         if (this.lastClickedPiece == null) {
             if (this.board.getBoard()[boxClicked] != null && this.board.getBoard()[boxClicked].getTeam() == turn) {
@@ -204,7 +231,6 @@ public class GameController extends GraphicsProgram {
                 }
             }
         } else {
-
             if (checkMove(possibleMoves(this.lastClickedPiece.getPosition()), boxClicked)) {
                 // Move image
                 if (this.board.getBoard()[boxClicked] != null) removeImage(boxClicked);
@@ -267,6 +293,7 @@ public class GameController extends GraphicsProgram {
                         }
                     }
                 }
+
                 turn = !turn;
             }
 
