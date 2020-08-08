@@ -1,2 +1,2 @@
 # Chess
-Chess with ML bot
+The game of Chess implemented entirely in Java.
